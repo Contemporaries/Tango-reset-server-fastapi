@@ -95,8 +95,9 @@ Use `ResponseModel` to ensure a unified response format:
 from model.response_models import ResponseModel
 
 return ResponseModel(
-    success=True,
-    message="success",
-    data=# Specific data
+    code: int
+    success: bool
+    message: str | None = None
+    data: dict | str | list | int | bool | None = None
 )
 ```
