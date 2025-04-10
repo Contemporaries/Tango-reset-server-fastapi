@@ -1,92 +1,92 @@
 # IHEP Tango REST API
 
-基于FastAPI和PyTango的REST API服务，用于与Tango设备进行交互。
+A REST API service based on FastAPI and PyTango for interacting with Tango devices.
 
-## 系统要求
+## System Requirements
 
 - Python 3.8+
-- Tango服务器环境
+- Tango server environment
 
-## 安装
+## Installation
 
-1. 克隆仓库：
+1. Clone the repository:
 ```bash
 git clone https://github.com/your-username/IHEP-Tango-Rest-API.git
 cd IHEP-Tango-Rest-API
 ```
 
-2. 创建并激活虚拟环境：
+2. Create and activate a virtual environment:
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
-# 或
+# or
 .venv\Scripts\activate  # Windows
 ```
 
-3. 安装依赖：
+3. Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-## 项目结构
+## Project Structure
 
 ```
 IHEP-Tango-Rest-API/
-├── assets/          # 静态资源文件
-├── config/          # 配置文件
-│   ├── env_config.py   #配置环境变量
-│   ├── log_config.py   #配置日志
-├── controller/      # API控制器
-│   ├── controller_attribute.py   # 属性相关接口
-│   ├── controller_command.py     # 命令相关接口
-│   ├── controller_db.py         # 数据库相关接口
-│   ├── controller_info.py       # 信息查询接口
-│   ├── controller_polling.py    # 轮询相关接口
-│   └── controller_property.py   # 属性配置接口
-|   └── controller_env.py       # 环境变量接口
-├── exception/       # 异常处理
-├── model/          # 数据模型
-├── service/        # 业务逻辑层
-│   ├── service_attribute.py     # 属性服务
-│   ├── service_command.py       # 命令服务
-│   ├── service_db.py           # 数据库服务
-│   ├── service_info.py         # 信息查询服务
-│   ├── service_polling.py      # 轮询服务
-│   └── service_property.py     # 属性配置服务
-│   └── service_env.py       # 属性环境变量服务
-├── test/           # 测试文件
-├── tools/          # 工具函数
-├── enums/          # 枚举定义
-├── main.py         # 应用入口
-└── requirements.txt # 项目依赖
-└── .env            # 环境变量
+├── assets/          # Static resource files
+├── config/          # Configuration files
+│   ├── env_config.py   # Environment variable configuration
+│   ├── log_config.py   # Log configuration
+├── controller/      # API controllers
+│   ├── controller_attribute.py   # Attribute-related interfaces
+│   ├── controller_command.py     # Command-related interfaces
+│   ├── controller_db.py         # Database-related interfaces
+│   ├── controller_info.py       # Information query interfaces
+│   ├── controller_polling.py    # Polling-related interfaces
+│   └── controller_property.py   # Property configuration interfaces
+|   └── controller_env.py       # Environment variable interfaces
+├── exception/       # Exception handling
+├── model/          # Data models
+├── service/        # Business logic layer
+│   ├── service_attribute.py     # Attribute services
+│   ├── service_command.py       # Command services
+│   ├── service_db.py           # Database services
+│   ├── service_info.py         # Information query services
+│   ├── service_polling.py      # Polling services
+│   └── service_property.py     # Property configuration services
+│   └── service_env.py       # Environment variable services
+├── test/           # Test files
+├── tools/          # Utility functions
+├── enums/          # Enum definitions
+├── main.py         # Application entry point
+└── requirements.txt # Project dependencies
+└── .env            # Environment variables
 ```
 
 
-## 开发指南
+## Development Guide
 
-### 1. 添加新API
+### 1. Adding New APIs
 
-1. 在`controller`目录下创建新的控制器文件
-2. 在`service`目录下实现业务逻辑
-3. 在`main.py`中注册路由
+1. Create a new controller file in the `controller` directory
+2. Implement business logic in the `service` directory
+3. Register the route in `main.py`
 
-### 2. 错误处理
+### 2. Error Handling
 
-使用`GlobalException`进行统一的错误处理：
+Use `GlobalException` for unified error handling:
 
 ```python
 from exception.global_exception import GlobalException
 
 try:
-    # 业务逻辑
+    # Business logic
 except Exception as e:
     raise GlobalException(str(e))
 ```
 
-### 3. 响应模型
+### 3. Response Model
 
-使用`ResponseModel`确保统一的响应格式：
+Use `ResponseModel` to ensure a unified response format:
 
 ```python
 from model.response_models import ResponseModel
@@ -94,7 +94,6 @@ from model.response_models import ResponseModel
 return ResponseModel(
     success=True,
     message="success",
-    data=# 具体数据
-
+    data=# Specific data
 )
 ```
