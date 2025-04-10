@@ -11,8 +11,8 @@ A REST API service based on FastAPI and PyTango for interacting with Tango devic
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/your-username/IHEP-Tango-Rest-API.git
-cd IHEP-Tango-Rest-API
+git clone https://github.com/Contemporaries/Tango-reset-server-fastapi.git
+cd Tango-reset-server-fastapi
 ```
 
 2. Create and activate a virtual environment:
