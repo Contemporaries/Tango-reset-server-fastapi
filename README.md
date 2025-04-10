@@ -28,6 +28,9 @@ source .venv/bin/activate  # Linux/Mac
 pip install -r requirements.txt
 ```
 
+## API Doc
+http(s)://your_host:8000/docs
+
 ## Project Structure
 
 ```
