@@ -1,4 +1,4 @@
-# IHEP Tango REST API
+# Tango REST API based on FastAPI
 
 A REST API service based on FastAPI and PyTango for interacting with Tango devices.
 

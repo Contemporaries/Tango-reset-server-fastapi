@@ -98,7 +98,12 @@ def read_all_device_attribute_value():
                 or name.startswith("tango")
             ):
                 continue
-            result.append({device_name: __read_all_attribute_value(device_name)})
+            try:
+                result.append({device_name: __read_all_attribute_value(device_name)})
+            except Exception as e:
+                logger.error(f"Error reading all attributes of device {device_name}: {e}")
+                result.append({device_name: str(e)})
+                pass
         return ResponseModel(
             code=Code.SUCCESS.value,
             success=True,
