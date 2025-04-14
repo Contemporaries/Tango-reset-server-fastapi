@@ -18,8 +18,10 @@ def execute_command(device_name: str, command_name: str, value: any):
         logger.info(f"Executing command {command_name} of device {device_name}")
         device_proxy = DeviceProxy(device_name)
         check_dev(device_name)
+        if value is "":
+            value = None
         logger.info(f"Device {device_name} is checked")
-        device_proxy.command_inout(command_name=command_name, value=value)
+        device_proxy.command_inout(command_name, value)
         return ResponseModel(
             code=Code.SUCCESS.value,
             success=True,
@@ -42,7 +44,7 @@ def init_device(device_name: str):
         device_proxy = DeviceProxy(device_name)
         check_dev(device_name)
         logger.info(f"Device {device_name} is checked")
-        device_proxy.command_inout(command_name="init", value=None)
+        device_proxy.command_inout("init")
         return ResponseModel(
             code=Code.SUCCESS.value,
             success=True,

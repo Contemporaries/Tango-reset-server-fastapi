@@ -32,10 +32,10 @@ def __check_dev_status(dev_name: str):
     state: DevState = dev_proxy.state()
     logger.info(f"Device {dev_name} is in {state} state.")
     if (
-        state == DevState.ON
-        or state == DevState.OPEN
-        or state == DevState.STANDBY
-        or state == DevState.RUNNING
+            state == DevState.ON
+            or state == DevState.OPEN
+            or state == DevState.STANDBY
+            or state == DevState.RUNNING
     ):
         return True
     else:
@@ -56,7 +56,7 @@ def __check_dev_is_exported(dev_name: str):
 def check_dev(device_name: str):
     if not __check_dev_is_exported(device_name):
         raise GlobalException(f"Device {device_name} is not exported.")
-    if not __check_dev_status(device_name):
-        raise GlobalException(
-            f"Device {device_name} is not in ON/OPEN/STANDBY/RUNNING state."
-        )
+    # if not __check_dev_status(device_name):
+    #     raise GlobalException(
+    #         f"Device {device_name} is not in ON/OPEN/STANDBY/RUNNING state."
+    #     )
