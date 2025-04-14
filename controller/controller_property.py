@@ -19,6 +19,13 @@ async def put_property(dev_name: str, prop_name: str, prop_value: str):
     return service_property.put_property(dev_name, prop_name, prop_value)
 
 
+@property_router.post(
+    path="/property/list", description="Set the value of a property list"
+)
+async def put_property_list(dev_name: str, prop_list: dict):
+    return service_property.put_property_list(dev_name, prop_list)
+
+
 @property_router.get(path="/property/list", description="Get the list of properties")
 async def get_property_list(dev_name: str):
     return service_property.get_property_list(dev_name)
@@ -27,4 +34,3 @@ async def get_property_list(dev_name: str):
 @property_router.delete(path="/property", description="Delete a property")
 async def del_property(dev_name: str, prop_name: str):
     return service_property.del_property(dev_name, prop_name)
-
