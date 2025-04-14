@@ -23,8 +23,9 @@ async def execute_command(request: CommandRequest):
     return service_command.execute_command(
         device_name=request.dev_name,
         command_name=request.cmd_name,
-        value=convert_to_value_type(request.value_type, request.value),
+        value=convert_to_value_type(value_type=request.value_type, value=request.value),
     )
+
 
 @command_router.get(path="/init", description="Initialize a device")
 async def init_device(dev_name: str):

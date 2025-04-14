@@ -18,10 +18,14 @@ async def add_device(dev_name: str, dev_class: str, server: str):
     :param dev_class: The class of the device.
     :param server: server_name/instance_name
     """
-    return service_db.add_device(device_name=dev_name, device_class=dev_class, server=server)
+    return service_db.add_device(
+        device_name=dev_name, device_class=dev_class, server=server
+    )
 
 
-@db_router.delete(path="/device", description="Delete a device from the Tango database.")
+@db_router.delete(
+    path="/device", description="Delete a device from the Tango database."
+)
 async def del_device(dev_name: str):
     """
     Delete a device from the Tango database.
@@ -31,12 +35,13 @@ async def del_device(dev_name: str):
     return service_db.del_device(device_name=dev_name)
 
 
-@db_router.delete(path="/server", description="Delete a server from the Tango database.")
+@db_router.delete(
+    path="/server", description="Delete a server from the Tango database."
+)
 async def del_server(server_name: str):
     """
     Delete a server from the Tango database.
 
     :param server_name: The name of the server to delete.
     """
-    service_db.del_server(server_name)
-
+    return service_db.del_server(server_name=server_name)

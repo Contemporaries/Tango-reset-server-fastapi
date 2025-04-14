@@ -32,7 +32,9 @@ def get_property(dev_name: str, prop_name: str):
         raise GlobalException(str(e))
 
 
-def put_property(dev_name: str, prop_name: str, prop_value: str):
+def put_property(
+    dev_name: str, prop_name: str, prop_value: str, reinitialize: bool = False
+):
     try:
         logger.info(f"Putting property {prop_name} for device {dev_name}")
         device_proxy = DeviceProxy(dev_name)
@@ -43,6 +45,9 @@ def put_property(dev_name: str, prop_name: str, prop_value: str):
         value.append(prop_value)
         device_proxy.put_property(value)
         logger.info(f"Property {prop_name} for device {dev_name} put")
+        if reinitialize:
+            device_proxy.command_inout("init")
+            logger.info(f"Device {dev_name} reinitialized")
         return ResponseModel(
             code=Code.SUCCESS.value,
             success=True,
@@ -54,7 +59,7 @@ def put_property(dev_name: str, prop_name: str, prop_value: str):
         raise GlobalException(str(e))
 
 
-def put_property_list(dev_name: str, prop_list: dict):
+def put_property_list(dev_name: str, prop_list: dict, reinitialize: bool = False):
     try:
         logger.info(f"Putting property list for device {dev_name}")
         device_proxy = DeviceProxy(dev_name)
@@ -65,6 +70,9 @@ def put_property_list(dev_name: str, prop_list: dict):
             properties[prop_name] = prop_value
         device_proxy.put_property(properties)
         logger.info(f"Property list for device {dev_name} put")
+        if reinitialize:
+            device_proxy.command_inout("init")
+            logger.info(f"Device {dev_name} reinitialized")
         return ResponseModel(
             code=Code.SUCCESS.value,
             success=True,

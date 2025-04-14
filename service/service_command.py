@@ -29,7 +29,9 @@ def execute_command(device_name: str, command_name: str, value: any):
             data=None,
         )
     except Exception as e:
-        logger.error(f"Error executing command {command_name} of device {device_name}: {e}")
+        logger.error(
+            f"Error executing command {command_name} of device {device_name}: {e}"
+        )
         raise GlobalException(str(e))
 
 

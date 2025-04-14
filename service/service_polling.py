@@ -14,7 +14,7 @@ from config.log_config import get_logger
 logger = get_logger(__name__)
 
 
-def start_polling(dev_name: str, prop_name: str, period: int) -> bool:
+def start_polling(dev_name: str, prop_name: str, period: int):
     try:
         logger.info(
             f"Starting polling for {dev_name} with {prop_name} and period {period}"

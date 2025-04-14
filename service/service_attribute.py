@@ -48,7 +48,9 @@ def read_attribute_value(device_name: str, attribute_name: str):
         )
         return response_model
     except Exception as e:
-        logger.error(f"Error reading attribute {attribute_name} of device {device_name}: {e}")
+        logger.error(
+            f"Error reading attribute {attribute_name} of device {device_name}: {e}"
+        )
         raise GlobalException(str(e))
 
 
@@ -67,7 +69,9 @@ def read_attribute_value_only_value(device_name: str, attribute_name: str):
         )
         return response_model
     except Exception as e:
-        logger.error(f"Error reading attribute {attribute_name} of device {device_name}: {e}")
+        logger.error(
+            f"Error reading attribute {attribute_name} of device {device_name}: {e}"
+        )
         raise GlobalException(str(e))
 
 
@@ -101,7 +105,9 @@ def read_all_device_attribute_value():
             try:
                 result.append({device_name: __read_all_attribute_value(device_name)})
             except Exception as e:
-                logger.error(f"Error reading all attributes of device {device_name}: {e}")
+                logger.error(
+                    f"Error reading all attributes of device {device_name}: {e}"
+                )
                 result.append({device_name: str(e)})
                 pass
         return ResponseModel(
@@ -133,7 +139,9 @@ def set_attribute_value(
             data={"status": "success"},
         )
     except Exception as e:
-        logger.error(f"Error setting attribute {attribute_name} of device {device_name}: {e}")
+        logger.error(
+            f"Error setting attribute {attribute_name} of device {device_name}: {e}"
+        )
         raise GlobalException(str(e))
 
 

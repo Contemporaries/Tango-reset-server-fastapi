@@ -19,13 +19,19 @@ async def get_device_info(dev_name: str):
     return service_info.get_device_info(device_name=dev_name)
 
 
-@info_router.get(path="/device/attribute", description="Get the information of an attribute of a device.")
+@info_router.get(
+    path="/device/attribute",
+    description="Get the information of an attribute of a device.",
+)
 async def get_device_attribute_info(dev_name: str, attr_name: str):
     return service_info.get_device_attribute_info(
         device_name=dev_name, attribute_name=attr_name
     )
 
 
-@info_router.get(path="/device/attributes", description="Get the information of all attributes of a device.")
+@info_router.get(
+    path="/device/attributes",
+    description="Get the information of all attributes of a device.",
+)
 async def get_all_device_attribute_info(dev_name: str):
     return service_info.get_all_device_attribute_info(device_name=dev_name)

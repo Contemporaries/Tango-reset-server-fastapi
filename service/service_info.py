@@ -87,7 +87,9 @@ def get_device_info(device_name: str):
 
 def get_device_attribute_info(device_name: str, attribute_name: str):
     try:
-        logger.info(f"Getting device attribute info for {device_name} and {attribute_name}")
+        logger.info(
+            f"Getting device attribute info for {device_name} and {attribute_name}"
+        )
         device_proxy = DeviceProxy(device_name)
         check_dev(device_name)
         logger.info(f"Device {device_name} is checked")
@@ -119,7 +121,9 @@ def get_device_attribute_info(device_name: str, attribute_name: str):
             },
         )
     except Exception as e:
-        logger.error(f"Error getting device attribute info for {device_name} and {attribute_name}: {e}")
+        logger.error(
+            f"Error getting device attribute info for {device_name} and {attribute_name}: {e}"
+        )
         raise GlobalException(str(e))
 
 

@@ -14,7 +14,7 @@ env_router = APIRouter()
 
 @env_router.post("/env/tango_host")
 async def set_tango_host(host: str):
-    service_env.set_tango_host(host)
+    service_env.set_tango_host(host=host)
     return ResponseModel(
         code=Code.SUCCESS.value,
         success=True,

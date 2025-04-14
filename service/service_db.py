@@ -58,7 +58,9 @@ def del_device(device_name):
             data=None,
         )
     except Exception as e:
-        logger.error(f"Error deleting device {device_name} from the Tango database: {e}")
+        logger.error(
+            f"Error deleting device {device_name} from the Tango database: {e}"
+        )
         raise GlobalException(str(e))
 
 
@@ -79,5 +81,7 @@ def del_server(server_name):
             data=None,
         )
     except Exception as e:
-        logger.error(f"Error deleting server {server_name} from the Tango database: {e}")
+        logger.error(
+            f"Error deleting server {server_name} from the Tango database: {e}"
+        )
         raise GlobalException(str(e))
