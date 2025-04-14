@@ -11,8 +11,8 @@ A REST API service based on FastAPI and PyTango for interacting with Tango devic
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/Contemporaries/Tango-reset-server-fastapi.git
-cd Tango-reset-server-fastapi
+git clone https://github.com/Contemporaries/Tango-rest-server-fastapi.git
+cd Tango-rest-server-fastapi
 ```
 
 2. Create and activate a virtual environment:
