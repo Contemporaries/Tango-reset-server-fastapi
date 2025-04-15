@@ -9,8 +9,15 @@ from exception.global_exception import GlobalException
 from model.request_models import ResponseModel
 from enums.enum_response import Code, Message
 from tools.tool_dev_status import check_dev
+from service.service_info import __get_device_command_list
 
 logger = get_logger(__name__)
+
+
+def get_command_list(device_name: str):
+    device_proxy = DeviceProxy(device_name)
+    check_dev(device_name)
+    return __get_device_command_list(device_proxy=device_proxy)
 
 
 def execute_command(device_name: str, command_name: str, value: any):

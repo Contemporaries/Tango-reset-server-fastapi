@@ -96,6 +96,7 @@ def read_all_device_attribute_value():
         result = []
         for device_name in device_name_list:
             name = str(device_name)
+            # TODO: 过滤设备规则
             if (
                 name.startswith("dserver")
                 or name.startswith("sys")

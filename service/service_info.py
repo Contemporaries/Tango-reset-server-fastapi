@@ -4,7 +4,7 @@
 # Date: 3/27/2025
 
 
-from tango import DeviceProxy, Database, AttributeInfoEx
+from tango import DeviceProxy, Database, AttributeInfoEx, DbDevFullInfo
 
 from exception.global_exception import GlobalException
 from model.request_models import ResponseModel
@@ -57,7 +57,7 @@ def get_device_info(device_name: str):
         device_proxy = DeviceProxy(device_name)
         check_dev(device_name)
         logger.info(f"Device {device_name} is checked")
-        device_info = db.get_device_info(device_name)
+        device_info: DbDevFullInfo = db.get_device_info(device_name)
         return ResponseModel(
             code=Code.SUCCESS.value,
             success=True,
@@ -72,7 +72,7 @@ def get_device_info(device_name: str):
                 "pid": device_info.pid,
                 "started_date": device_info.started_date,
                 "stopped_date": device_info.stopped_date,
-                "properties": __get_device_property_list(device_proxy),
+                "properties": list(__get_device_property_list(device_proxy)),
                 "attributes": __get_device_attribute_list(device_proxy),
                 "commands": __get_device_command_list(device_proxy),
                 "last_executed_commands": list(
@@ -170,52 +170,65 @@ def get_all_device_attribute_info(device_name: str):
 
 
 def __get_device_property_list(device_proxy: DeviceProxy):
-    result = []
-    properties = device_proxy.get_property_list(filter="*")
-    for prop in properties:
-        result.append(
-            {
-                "name": prop.name,
-                "data_type": prop.data_type,
-                "data_format": prop.data_format,
-                "description": prop.description,
-            }
+    try:
+        return device_proxy.get_property_list(filter="*")
+    except Exception as e:
+        logger.error(
+            f"Error getting device property list for {device_proxy.dev_name}: {e}"
         )
-    return result
+        return []
 
 
 def __get_device_attribute_list(device_proxy: DeviceProxy):
     result = []
-    attributes = device_proxy.attribute_list_query_ex()
-    for attr in attributes:
-        result.append(
-            {
-                "name": attr.name,
-                "data_type": attr.data_type,
-                "data_format": attr.data_format,
-                "description": attr.description,
-            }
+    try:
+        attributes = device_proxy.attribute_list_query_ex()
+        for attr in attributes:
+            result.append(
+                {
+                    "name": attr.name,
+                    "data_type": attr.data_type,
+                    "data_format": attr.data_format,
+                    "description": attr.description,
+                }
+            )
+        return result
+    except Exception as e:
+        logger.error(
+            f"Error getting device attribute list for {device_proxy.dev_name}: {e}"
         )
-    return result
+        return []
 
 
 def __get_device_command_list(device_proxy: DeviceProxy):
     result = []
-    commands = device_proxy.command_list_query()
-    # [CommandInfo(cmd_name = 'Init', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevVoid, out_type_desc = 'Uninitialised'), CommandInfo(cmd_name = 'State', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevState, out_type_desc = 'Device state'), CommandInfo(cmd_name = 'Status', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevString, out_type_desc = 'Device status')]
-    for cmd in commands:
-        result.append(
-            {
-                "name": cmd.cmd_name,
-                "in_type": cmd.in_type,
-                "in_type_desc": cmd.in_type_desc,
-                "out_type": cmd.out_type,
-                "out_type_desc": cmd.out_type_desc,
-            }
+    try:
+        commands = device_proxy.command_list_query()
+        # [CommandInfo(cmd_name = 'Init', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevVoid, out_type_desc = 'Uninitialised'), CommandInfo(cmd_name = 'State', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevState, out_type_desc = 'Device state'), CommandInfo(cmd_name = 'Status', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevString, out_type_desc = 'Device status')]
+        for cmd in commands:
+            result.append(
+                {
+                    "name": cmd.cmd_name,
+                    "in_type": cmd.in_type,
+                    "in_type_desc": cmd.in_type_desc,
+                    "out_type": cmd.out_type,
+                    "out_type_desc": cmd.out_type_desc,
+                }
+            )
+        return result
+    except Exception as e:
+        logger.error(
+            f"Error getting device command list for {device_proxy.dev_name}: {e}"
         )
-    return result
+        return []
 
 
 def __get_device_last_executed_commands(device_proxy: DeviceProxy, n: int = 3):
     # ['24/03/2025 02:54:42:04 : Operation command_list_query_2 requested from 10.2.110.34', '24/03/2025 02:54:42:04 : Operation get_attribute_config_5 requested from 10.2.110.34', '24/03/2025 02:54:42:03 : Operation info requested from 10.2.110.34']
-    return device_proxy.black_box(n=n)
+    try:
+        return device_proxy.black_box(n=n)
+    except Exception as e:
+        logger.error(
+            f"Error getting device last executed commands for {device_proxy.dev_name}: {e}"
+        )
+        return []
