@@ -26,7 +26,7 @@ async def execute_command(request: CommandRequest):
     )
 
 
-@command_router.get(path="/command_list", description="Get the command list")
+@command_router.get(path="/command/list", description="Get the command list")
 async def get_command_list(dev_name: str):
     return service_command.get_command_list(device_name=dev_name)
 

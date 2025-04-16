@@ -15,7 +15,7 @@ from tango import (
 from exception.global_exception import GlobalException
 from model.request_models import ResponseModel
 from tools.tool_dev_status import check_dev
-from enums.enum_response import Code, Message
+from enums.enum_response import Code, Message, AIPrompt
 from config.log_config import get_logger
 
 logger = get_logger(__name__)
@@ -42,28 +42,28 @@ def get_info():
         raise GlobalException(str(e))
 
 
-def get_device_list(filter: str = "*"):
+def get_device_list(wildcard: str = "*"):
     try:
         logger.info("Getting device list from the Tango database")
-        return list(db.get_device_exported(filter))
+        return list(db.get_device_exported(wildcard))
     except Exception as e:
         logger.error("Error getting device list from the Tango database: {e}")
         raise GlobalException(str(e))
 
 
-def get_class_list(filter: str = "*"):
+def get_class_list(wildcard: str = "*"):
     try:
         logger.info("Getting class list from the Tango database")
-        return list(db.get_class_list(filter))
+        return list(db.get_class_list(wildcard))
     except Exception as e:
         logger.error("Error getting class list from the Tango database: {e}")
         raise GlobalException(str(e))
 
 
-def get_server_list(filter: str = "*"):
+def get_server_list(wildcard: str = "*"):
     try:
         logger.info("Getting server list from the Tango database")
-        return list(db.get_server_list(filter))
+        return list(db.get_server_list(wildcard))
     except Exception as e:
         logger.error("Error getting server list from the Tango database: {e}")
         raise GlobalException(str(e))
@@ -115,7 +115,7 @@ def get_device_info(device_name: str):
         )
     except Exception as e:
         logger.error(f"Error getting device info for {device_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(AIPrompt.NOT_FOUND_DEVICE.name)
 
 
 def get_device_attribute_info(device_name: str, attribute_name: str):
@@ -167,6 +167,7 @@ def get_all_device_attribute_info(device_name: str):
         device_proxy = DeviceProxy(device_name)
         check_dev(device_name)
         attr_info: list[AttributeInfo] = device_proxy.attribute_list_query()
+        # [AttributeInfo(data_format = tango._tango.AttrDataFormat.SPECTRUM, data_type = tango._tango.CmdArgType.DevDouble, description = '温度湿度值，单位℃', disp_level = tango._tango.DispLevel.OPERATOR, display_unit = 'No display unit', extensions = [], format = '%6.2f', label = '温度湿度', max_alarm = 'Not specified', max_dim_x = 2, max_dim_y = 0, max_value = 'Not specified', min_alarm = 'Not specified', min_value = 'Not specified', name = 'temp_humidity', standard_unit = 'No standard unit', unit = '', writable = tango._tango.AttrWriteType.READ, writable_attr_name = 'None'), AttributeInfo(data_format = tango._tango.AttrDataFormat.SCALAR, data_type = tango._tango.CmdArgType.DevFloat, description = '环境温度值，单位℃', disp_level = tango._tango.DispLevel.OPERATOR, display_unit = 'No display unit', extensions = [], format = '%6.2f', label = '环境温度', max_alarm = 'Not specified', max_dim_x = 1, max_dim_y = 0, max_value = 'Not specified', min_alarm = 'Not specified', min_value = 'Not specified', name = 'environment_temp', standard_unit = 'No standard unit', unit = '', writable = tango._tango.AttrWriteType.READ, writable_attr_name = 'None'), AttributeInfo(data_format = tango._tango.AttrDataFormat.SPECTRUM, data_type = tango._tango.CmdArgType.DevDouble, description = '8个通道的温度值列表，单位℃', disp_level = tango._tango.DispLevel.OPERATOR, display_unit = 'No display unit', extensions = [], format = '%6.2f', label = '通道温度', max_alarm = 'Not specified', max_dim_x = 8, max_dim_y = 0, max_value = 'Not specified', min_alarm = 'Not specified', min_value = 'Not specified', name = 'channel_temps', standard_unit = 'No standard unit', unit = '', writable = tango._tango.AttrWriteType.READ, writable_attr_name = 'None'), AttributeInfo(data_format = tango._tango.AttrDataFormat.SCALAR, data_type = tango._tango.CmdArgType.DevState, description = 'No description', disp_level = tango._tango.DispLevel.OPERATOR, display_unit = 'No display unit', extensions = [], format = 'Not specified', label = 'State', max_alarm = 'Not specified', max_dim_x = 1, max_dim_y = 0, max_value = 'Not specified', min_alarm = 'Not specified', min_value = 'Not specified', name = 'State', standard_unit = 'No standard unit', unit = '', writable = tango._tango.AttrWriteType.READ, writable_attr_name = 'None'), AttributeInfo(data_format = tango._tango.AttrDataFormat.SCALAR, data_type = tango._tango.CmdArgType.DevString, description = 'No description', disp_level = tango._tango.DispLevel.OPERATOR, display_unit = 'No display unit', extensions = [], format = '%s', label = 'Status', max_alarm = 'Not specified', max_dim_x = 1, max_dim_y = 0, max_value = 'Not specified', min_alarm = 'Not specified', min_value = 'Not specified', name = 'Status', standard_unit = 'No standard unit', unit = '', writable = tango._tango.AttrWriteType.READ, writable_attr_name = 'None')]
         for attr in attr_info:
             result.append(
                 {
@@ -250,6 +251,7 @@ def __get_device_command_list(device_proxy: DeviceProxy):
     result = []
     try:
         commands: list[CommandInfo] = device_proxy.command_list_query()
+        # [CommandInfo(cmd_name = 'Init', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevVoid, out_type_desc = 'Uninitialised'), CommandInfo(cmd_name = 'State', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevState, out_type_desc = 'Device state'), CommandInfo(cmd_name = 'Status', cmd_tag = 0, disp_level = tango._tango.DispLevel.OPERATOR, in_type = tango._tango.CmdArgType.DevVoid, in_type_desc = 'Uninitialised', out_type = tango._tango.CmdArgType.DevString, out_type_desc = 'Device status')]
         for cmd in commands:
             result.append(
                 {
@@ -269,6 +271,7 @@ def __get_device_command_list(device_proxy: DeviceProxy):
 
 
 def __get_device_last_executed_commands(device_proxy: DeviceProxy, n: int = 3):
+    # ['24/03/2025 02:54:42:04 : Operation command_list_query_2 requested from 10.2.110.34', '24/03/2025 02:54:42:04 : Operation get_attribute_config_5 requested from 10.2.110.34', '24/03/2025 02:54:42:03 : Operation info requested from 10.2.110.34']
     try:
         return device_proxy.black_box(n=n)
     except Exception as e:

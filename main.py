@@ -15,7 +15,7 @@ from controller.controller_db import db_router
 from controller.controller_property import property_router
 from controller.controller_polling import polling_router
 from controller.controller_env import env_router
-from enums.enum_response import Code, Message
+from enums.enum_response import Code, Message, AIPrompt
 from exception.global_exception import GlobalException
 from config.env_config import get_env
 from config.log_config import get_logger
@@ -35,6 +35,7 @@ app.include_router(router=db_router)
 app.include_router(router=property_router)
 app.include_router(router=polling_router)
 app.include_router(router=env_router)
+
 
 def __init_env():
     if "TANGO_HOST" not in os.environ:
@@ -57,7 +58,7 @@ async def global_exception_handler(request: Request, exc: GlobalException):
             "code": Code.EXCEPTION.value,
             "message": Message.EXCEPTION.value,
             "reason": exc.name,
-            "data": {"request": str(request.url)},
+            "data": AIPrompt[exc.name].value,
         },
     )
 
