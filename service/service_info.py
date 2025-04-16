@@ -117,7 +117,6 @@ def get_device_attribute_info(device_name: str, attribute_name: str):
                 "max_alarm": attr_info.max_alarm,
                 "min_alarm": attr_info.min_alarm,
                 "extensions": attr_info.extensions,
-                "is_polled": attr_info.is_polled,
             },
         )
     except Exception as e:
