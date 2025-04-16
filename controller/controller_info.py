@@ -14,6 +14,27 @@ async def get_info():
     return service_info.get_info()
 
 
+@info_router.get(
+    path="/device/list", description="Get the list of devices with wildcard"
+)
+async def get_device_list(filter: str = "*"):
+    return service_info.get_device_list(filter)
+
+
+@info_router.get(
+    path="/class/list", description="Get the list of classes with wildcard"
+)
+async def get_class_list(filter: str = "*"):
+    return service_info.get_class_list(filter)
+
+
+@info_router.get(
+    path="/server/list", description="Get the list of servers with wildcard"
+)
+async def get_server_list(filter: str = "*"):
+    return service_info.get_server_list(filter)
+
+
 @info_router.get(path="/device", description="Get the information of a device.")
 async def get_device_info(dev_name: str):
     return service_info.get_device_info(device_name=dev_name)

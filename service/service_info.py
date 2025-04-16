@@ -36,6 +36,33 @@ def get_info():
         raise GlobalException(str(e))
 
 
+def get_device_list(filter: str = "*"):
+    try:
+        logger.info("Getting device list from the Tango database")
+        return list(db.get_device_exported(filter))
+    except Exception as e:
+        logger.error("Error getting device list from the Tango database: {e}")
+        raise GlobalException(str(e))
+
+
+def get_class_list(filter: str = "*"):
+    try:
+        logger.info("Getting class list from the Tango database")
+        return list(db.get_class_list(filter))
+    except Exception as e:
+        logger.error("Error getting class list from the Tango database: {e}")
+        raise GlobalException(str(e))
+
+
+def get_server_list(filter: str = "*"):
+    try:
+        logger.info("Getting server list from the Tango database")
+        return list(db.get_server_list(filter))
+    except Exception as e:
+        logger.error("Error getting server list from the Tango database: {e}")
+        raise GlobalException(str(e))
+
+
 def __server_list():
     logger.info("Getting server list from the Tango database")
     return list(db.get_server_list())
@@ -72,9 +99,9 @@ def get_device_info(device_name: str):
                 "pid": device_info.pid,
                 "started_date": device_info.started_date,
                 "stopped_date": device_info.stopped_date,
-                "properties": list(__get_device_property_list(device_proxy)),
-                "attributes": __get_device_attribute_list(device_proxy),
-                "commands": __get_device_command_list(device_proxy),
+                "property_list": list(__get_device_property_list(device_proxy)),
+                "attribute_list": __get_device_attribute_list(device_proxy),
+                "command_list": __get_device_command_list(device_proxy),
                 "last_executed_commands": list(
                     __get_device_last_executed_commands(device_proxy)
                 ),
@@ -117,7 +144,6 @@ def get_device_attribute_info(device_name: str, attribute_name: str):
                 "max_alarm": attr_info.max_alarm,
                 "min_alarm": attr_info.min_alarm,
                 "extensions": attr_info.extensions,
-                "is_polled": attr_info.is_polled,
             },
         )
     except Exception as e:
@@ -182,7 +208,7 @@ def __get_device_property_list(device_proxy: DeviceProxy):
 def __get_device_attribute_list(device_proxy: DeviceProxy):
     result = []
     try:
-        attributes = device_proxy.attribute_list_query_ex()
+        attributes: list[AttributeInfoEx] = device_proxy.attribute_list_query_ex()
         for attr in attributes:
             result.append(
                 {
@@ -190,6 +216,20 @@ def __get_device_attribute_list(device_proxy: DeviceProxy):
                     "data_type": attr.data_type,
                     "data_format": attr.data_format,
                     "description": attr.description,
+                    "display_unit": attr.display_unit,
+                    "max_dim_x": attr.max_dim_x,
+                    "max_dim_y": attr.max_dim_y,
+                    "max_value": attr.max_value,
+                    "min_value": attr.min_value,
+                    "standard_unit": attr.standard_unit,
+                    "unit": attr.unit,
+                    "writable": attr.writable,
+                    "writable_attr_name": attr.writable_attr_name,
+                    "label": attr.label,
+                    "format": attr.format,
+                    "max_alarm": attr.max_alarm,
+                    "min_alarm": attr.min_alarm,
+                    "extensions": attr.extensions,
                 }
             )
         return result

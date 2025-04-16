@@ -7,7 +7,6 @@ from fastapi import APIRouter
 from pydantic import BaseModel
 from service import service_command
 from tools.tool_convert import convert_to_value_type
-
 command_router = APIRouter()
 
 
@@ -25,6 +24,11 @@ async def execute_command(request: CommandRequest):
         command_name=request.cmd_name,
         value=convert_to_value_type(value_type=request.value_type, value=request.value),
     )
+
+
+@command_router.get(path="/command_list", description="Get the command list")
+async def get_command_list(dev_name: str):
+    return service_command.get_command_list(device_name=dev_name)
 
 
 @command_router.get(path="/init", description="Initialize a device")
