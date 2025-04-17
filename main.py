@@ -15,7 +15,7 @@ from controller.controller_db import db_router
 from controller.controller_property import property_router
 from controller.controller_polling import polling_router
 from controller.controller_env import env_router
-from enums.enum_response import Code, Message, AIPrompt
+from enums.enum_response import Code, Message, MCPPrompt  
 from exception.global_exception import GlobalException
 from config.env_config import get_env
 from config.log_config import get_logger
@@ -58,7 +58,7 @@ async def global_exception_handler(request: Request, exc: GlobalException):
             "code": Code.EXCEPTION.value,
             "message": Message.EXCEPTION.value,
             "reason": exc.name,
-            "data": AIPrompt[exc.name].value,
+            "data": MCPPrompt[exc.name].value,
         },
     )
 
