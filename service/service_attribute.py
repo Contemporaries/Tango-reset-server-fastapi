@@ -4,7 +4,7 @@
 # Date: 3/27/2025
 
 from config.log_config import get_logger
-from enums.enum_response import Code, Message
+from enums.enum_response import Code, Message, MCPPrompt
 from exception.global_exception import GlobalException
 from tools.tool_convert import convert_to_value
 from service.service_info import __device_list
@@ -16,6 +16,13 @@ logger = get_logger(__name__)
 
 
 def read_attribute_value(device_name: str, attribute_name: str):
+    """
+    Read the value of an attribute of a device.
+
+    :param device_name: The name of the device.
+    :param attribute_name: The name of the attribute.
+    :return: The value of the attribute.
+    """
     try:
         logger.info(f"Reading attribute {attribute_name} of device {device_name}")
         device_proxy = DeviceProxy(device_name)
@@ -51,10 +58,17 @@ def read_attribute_value(device_name: str, attribute_name: str):
         logger.error(
             f"Error reading attribute {attribute_name} of device {device_name}: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_ATTRIBUTE.name, str(e))
 
 
 def read_attribute_value_only_value(device_name: str, attribute_name: str):
+    """
+    Read the value of an attribute of a device.
+
+    :param device_name: The name of the device.
+    :param attribute_name: The name of the attribute.
+    :return: The value of the attribute.
+    """
     try:
         logger.info(f"Reading attribute {attribute_name} of device {device_name}")
         device_proxy = DeviceProxy(device_name)
@@ -72,10 +86,16 @@ def read_attribute_value_only_value(device_name: str, attribute_name: str):
         logger.error(
             f"Error reading attribute {attribute_name} of device {device_name}: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_ATTRIBUTE.name, str(e))
 
 
 def read_all_attribute_value(device_name: str):
+    """
+    Read the value of all attributes of a device.
+
+    :param device_name: The name of the device.
+    :return: The value of all attributes of the device.
+    """
     try:
         logger.info(f"Reading all attributes of device {device_name}")
         return ResponseModel(
@@ -86,10 +106,15 @@ def read_all_attribute_value(device_name: str):
         )
     except Exception as e:
         logger.error(f"Error reading all attributes of device {device_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_ATTRIBUTE.name, str(e))
 
 
 def read_all_device_attribute_value():
+    """
+    Read the value of all attributes of all devices.
+
+    :return: The value of all attributes of all devices.
+    """
     try:
         logger.info(f"Reading all attributes of all devices")
         device_name_list = __device_list()
@@ -119,12 +144,19 @@ def read_all_device_attribute_value():
         )
     except Exception as e:
         logger.error(f"Error reading all attributes of all devices: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_ATTRIBUTE.name, str(e))
 
 
 def set_attribute_value(
     device_name: str, attribute_name: str, value: AttributeInfoModel
 ):
+    """
+    Set the value of an attribute of a device.
+
+    :param device_name: The name of the device.
+    :param attribute_name: The name of the attribute.
+    :param value: The value of the attribute.
+    """
     try:
         logger.info(f"Setting attribute {attribute_name} of device {device_name}")
         device_proxy = DeviceProxy(device_name)
@@ -143,10 +175,16 @@ def set_attribute_value(
         logger.error(
             f"Error setting attribute {attribute_name} of device {device_name}: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_ATTRIBUTE.name, str(e))
 
 
 def __read_all_attribute_value(device_name: str):
+    """
+    Read the value of all attributes of a device.
+
+    :param device_name: The name of the device.
+    :return: The value of all attributes of the device.
+    """
     logger.info(f"Reading all attributes of device {device_name}")
     device_proxy = DeviceProxy(device_name)
     check_dev(device_name)

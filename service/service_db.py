@@ -4,7 +4,7 @@
 # Date: 3/27/2025
 
 from tango import Database, DbDevInfo
-from enums.enum_response import Code, Message
+from enums.enum_response import Code, Message, MCPPrompt
 from exception.global_exception import GlobalException
 from model.request_models import ResponseModel
 from config.log_config import get_logger
@@ -38,7 +38,7 @@ def add_device(device_name, device_class, server):
         )
     except Exception as e:
         logger.error(f"Error adding device {device_name} to the Tango database: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.ADD_DEVICE_ERROR.name, str(e))
 
 
 def del_device(device_name):
@@ -61,7 +61,7 @@ def del_device(device_name):
         logger.error(
             f"Error deleting device {device_name} from the Tango database: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_DEVICE.name, str(e))
 
 
 def del_server(server_name):
@@ -84,4 +84,4 @@ def del_server(server_name):
         logger.error(
             f"Error deleting server {server_name} from the Tango database: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_SERVER.name, str(e))

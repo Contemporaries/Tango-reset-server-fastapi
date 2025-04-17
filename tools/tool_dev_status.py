@@ -7,7 +7,7 @@ from tango import Database, DevState, DeviceProxy
 
 from exception.global_exception import GlobalException
 from config.log_config import get_logger
-
+from enums.enum_response import MCPPrompt
 logger = get_logger(__name__)
 
 
@@ -55,7 +55,7 @@ def __check_dev_is_exported(dev_name: str):
 
 def check_dev(device_name: str):
     if not __check_dev_is_exported(device_name):
-        raise GlobalException(f"Device {device_name} is not exported.")
+        raise GlobalException(MCPPrompt.NOT_EXPORT_DEVICE.name)
     # TODO: 检查设备状态
     # if not __check_dev_status(device_name):
     #     raise GlobalException(

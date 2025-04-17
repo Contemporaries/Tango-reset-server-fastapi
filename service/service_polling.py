@@ -8,13 +8,20 @@ from tango import AttributeInfoEx, CommandInfo, DbData, DeviceProxy, DbDatum
 from exception.global_exception import GlobalException
 from model.request_models import ResponseModel
 from tools.tool_dev_status import check_dev
-from enums.enum_response import Code, Message
+from enums.enum_response import Code, Message, MCPPrompt
 from config.log_config import get_logger
 
 logger = get_logger(__name__)
 
 
 def start_polling(dev_name: str, prop_name: str, period: int):
+    """
+    Start polling for a device attribute.
+
+    :param dev_name: The name of the device.
+    :param prop_name: The name of the attribute to poll.
+    :param period: The polling period in milliseconds.
+    """
     try:
         logger.info(
             f"Starting polling for {dev_name} with {prop_name} and period {period}"
@@ -39,10 +46,16 @@ def start_polling(dev_name: str, prop_name: str, period: int):
         logger.error(
             f"Error starting polling for {dev_name} with {prop_name} and period {period}: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_PROPERTY_ERROR.name, str(e))
 
 
 def stop_polling(dev_name: str, prop_name: str):
+    """
+    Stop polling for a device attribute.
+
+    :param dev_name: The name of the device.
+    :param prop_name: The name of the attribute to stop polling.
+    """
     try:
         logger.info(f"Stopping polling for {dev_name} with {prop_name}")
         dev_proxy = DeviceProxy(dev_name)
@@ -60,10 +73,17 @@ def stop_polling(dev_name: str, prop_name: str):
         )
     except Exception as e:
         logger.error(f"Error stopping polling for {dev_name} with {prop_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_PROPERTY_ERROR.name, str(e))
 
 
 def start_cmd_polling(dev_name: str, cmd_name: str, period: int):
+    """
+    Start command polling for a device.
+
+    :param dev_name: The name of the device.
+    :param cmd_name: The name of the command to poll.
+    :param period: The polling period in milliseconds.
+    """
     try:
         logger.info(
             f"Starting command polling for {dev_name} with {cmd_name} and period {period}"
@@ -85,10 +105,16 @@ def start_cmd_polling(dev_name: str, cmd_name: str, period: int):
         logger.error(
             f"Error starting command polling for {dev_name} with {cmd_name} and period {period}: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_COMMAND_ERROR.name, str(e))
 
 
 def stop_cmd_polling(dev_name: str, cmd_name: str):
+    """
+    Stop command polling for a device.
+
+    :param dev_name: The name of the device.
+    :param cmd_name: The name of the command to stop polling.
+    """
     try:
         logger.info(f"Stopping command polling for {dev_name} with {cmd_name}")
         dev_proxy = DeviceProxy(dev_name)
@@ -106,10 +132,16 @@ def stop_cmd_polling(dev_name: str, cmd_name: str):
         logger.error(
             f"Error stopping command polling for {dev_name} with {cmd_name}: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_COMMAND_ERROR.name, str(e))
 
 
 def set_ring_depth(dev_name: str, depth: int):
+    """
+    Set the ring depth for a device.
+
+    :param dev_name: The name of the device.
+    :param depth: The ring depth to set.
+    """
     try:
         logger.info(f"Setting ring depth for {dev_name} to {depth}")
         dev_proxy = DeviceProxy(dev_name)
@@ -128,10 +160,16 @@ def set_ring_depth(dev_name: str, depth: int):
         )
     except Exception as e:
         logger.error(f"Error setting ring depth for {dev_name} to {depth}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_DEVICE.name, str(e))
 
 
 def get_polling_list_and_info(dev_name: str):
+    """
+    Get the polling list and info for a device.
+
+    :param dev_name: The name of the device.
+    :return: The polling list and info for the device.
+    """
     try:
         logger.info(f"Getting polling list and info for {dev_name}")
         dev_proxy = DeviceProxy(dev_name)
@@ -163,4 +201,4 @@ def get_polling_list_and_info(dev_name: str):
         )
     except Exception as e:
         logger.error(f"Error getting polling list and info for {dev_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_DEVICE.name, str(e))

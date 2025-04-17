@@ -68,7 +68,14 @@ class Message(Enum):
     OTHER = "Request unknown!"
 
 
-class AIPrompt(Enum):
+class MCPPrompt(Enum):
+    EXCEPTION = f"Occurred an exception, please check the request"
+    DEVICE_OR_ATTRIBUTE_ERROR = f"Device or attribute error, please check the device name or attribute name"
+    DEVICE_OR_PROPERTY_ERROR = f"Device or property error, please check the device name or property name"
+    DEVICE_OR_COMMAND_ERROR = f"Device or command error, please check the device name or command name"
+    NOT_FOUND_HOST = f"Tango host is not found, please check the TANGO_HOST environment variable"
+    ADD_DEVICE_ERROR = f"Add device error, please check the device name is correct domain/family/member"
+    NOT_EXPORT_DEVICE = f"Device is not exported, please check the device name or call the {API_ENDPOINTS['info']['device_list']} interface to get the device list and try again"
     NOT_FOUND_DEVICE = f"No device found, please check the device name or call the {API_ENDPOINTS['info']['device_list']} interface to get the device list and try again"
     NOT_FOUND_ATTRIBUTE = f"No attribute found, please check the attribute name or call the {API_ENDPOINTS['info']['device_attributes']} interface to get the device all attribute list and try again"
     NOT_FOUND_COMMAND = f"No command found, please check the command name or call the {API_ENDPOINTS['command']['command_list']} interface to get the device all command list and try again"

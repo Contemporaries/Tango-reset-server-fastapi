@@ -6,6 +6,7 @@
 
 from tango import (
     CommandInfo,
+    DbDatum,
     DeviceProxy,
     Database,
     DbDevFullInfo,
@@ -15,7 +16,7 @@ from tango import (
 from exception.global_exception import GlobalException
 from model.request_models import ResponseModel
 from tools.tool_dev_status import check_dev
-from enums.enum_response import Code, Message, AIPrompt
+from enums.enum_response import Code, Message, MCPPrompt
 from config.log_config import get_logger
 
 logger = get_logger(__name__)
@@ -24,6 +25,11 @@ db = Database()
 
 
 def get_info():
+    """
+    Get information about the Tango database.
+
+    :return: The information about the Tango database.
+    """
     try:
         logger.info("Getting information about the Tango database")
         data = {
@@ -39,16 +45,21 @@ def get_info():
         )
     except Exception as e:
         logger.error("Error getting information about the Tango database: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.EXCEPTION.name, str(e))
 
 
 def get_device_list(wildcard: str = "*"):
     try:
         logger.info("Getting device list from the Tango database")
-        return list(db.get_device_exported(wildcard))
+        exported_list: list[DbDatum] = db.get_device_exported("*")
+        find_list: list[DbDatum] = []
+        for device in exported_list:
+            if wildcard in device.name:
+                find_list.append(device)
+        return find_list
     except Exception as e:
         logger.error("Error getting device list from the Tango database: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.EXCEPTION.name, str(e))
 
 
 def get_class_list(wildcard: str = "*"):
@@ -57,7 +68,7 @@ def get_class_list(wildcard: str = "*"):
         return list(db.get_class_list(wildcard))
     except Exception as e:
         logger.error("Error getting class list from the Tango database: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.EXCEPTION.name, str(e))
 
 
 def get_server_list(wildcard: str = "*"):
@@ -66,7 +77,7 @@ def get_server_list(wildcard: str = "*"):
         return list(db.get_server_list(wildcard))
     except Exception as e:
         logger.error("Error getting server list from the Tango database: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.EXCEPTION.name, str(e))
 
 
 def __server_list():
@@ -85,6 +96,12 @@ def __class_list():
 
 
 def get_device_info(device_name: str):
+    """
+    Get the device info for a device.
+
+    :param device_name: The name of the device.
+    :return: The device info for the device.
+    """
     try:
         logger.info(f"Getting device info for {device_name}")
         device_proxy = DeviceProxy(device_name)
@@ -115,10 +132,17 @@ def get_device_info(device_name: str):
         )
     except Exception as e:
         logger.error(f"Error getting device info for {device_name}: {e}")
-        raise GlobalException(AIPrompt.NOT_FOUND_DEVICE.name)
+        raise GlobalException(MCPPrompt.NOT_FOUND_DEVICE.name, str(e))
 
 
 def get_device_attribute_info(device_name: str, attribute_name: str):
+    """
+    Get the attribute info for a device.
+
+    :param device_name: The name of the device.
+    :param attribute_name: The name of the attribute.
+    :return: The attribute info for the device.
+    """
     try:
         logger.info(
             f"Getting device attribute info for {device_name} and {attribute_name}"
@@ -127,7 +151,6 @@ def get_device_attribute_info(device_name: str, attribute_name: str):
         check_dev(device_name)
         logger.info(f"Device {device_name} is checked")
         attr_info: AttributeInfo = device_proxy.attribute_query(attribute_name)
-        print(f"attr_info: {attr_info}")
         return ResponseModel(
             code=Code.SUCCESS.value,
             success=True,
@@ -157,10 +180,16 @@ def get_device_attribute_info(device_name: str, attribute_name: str):
         logger.error(
             f"Error getting device attribute info for {device_name} and {attribute_name}: {e}"
         )
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_ATTRIBUTE_ERROR.name, str(e))
 
 
 def get_all_device_attribute_info(device_name: str):
+    """
+    Get all attribute info for a device.
+
+    :param device_name: The name of the device.
+    :return: The attribute info for the device.
+    """
     try:
         logger.info(f"Getting all device attribute info for {device_name}")
         result = []
@@ -199,10 +228,16 @@ def get_all_device_attribute_info(device_name: str):
         )
     except Exception as e:
         logger.error(f"Error getting all device attribute info for {device_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_ATTRIBUTE_ERROR.name, str(e))
 
 
 def __get_device_property_list(device_proxy: DeviceProxy):
+    """
+    Get the property list of a device.
+
+    :param device_proxy: The device proxy.
+    :return: The property list of the device.
+    """
     try:
         return device_proxy.get_property_list(filter="*")
     except Exception as e:
@@ -213,6 +248,12 @@ def __get_device_property_list(device_proxy: DeviceProxy):
 
 
 def __get_device_attribute_list(device_proxy: DeviceProxy):
+    """
+    Get the attribute list of a device.
+
+    :param device_proxy: The device proxy.
+    :return: The attribute list of the device.
+    """
     result = []
     try:
         attributes: list[AttributeInfo] = device_proxy.attribute_list_query()
@@ -248,6 +289,12 @@ def __get_device_attribute_list(device_proxy: DeviceProxy):
 
 
 def __get_device_command_list(device_proxy: DeviceProxy):
+    """
+    Get the command list of a device.
+
+    :param device_proxy: The device proxy.
+    :return: The command list of the device.
+    """
     result = []
     try:
         commands: list[CommandInfo] = device_proxy.command_list_query()
@@ -271,7 +318,13 @@ def __get_device_command_list(device_proxy: DeviceProxy):
 
 
 def __get_device_last_executed_commands(device_proxy: DeviceProxy, n: int = 3):
-    # ['24/03/2025 02:54:42:04 : Operation command_list_query_2 requested from 10.2.110.34', '24/03/2025 02:54:42:04 : Operation get_attribute_config_5 requested from 10.2.110.34', '24/03/2025 02:54:42:03 : Operation info requested from 10.2.110.34']
+    """
+    Get the last executed commands of a device.
+
+    :param device_proxy: The device proxy.
+    :param n: The number of commands to get.
+    :return: The last executed commands of the device.
+    """
     try:
         return device_proxy.black_box(n=n)
     except Exception as e:

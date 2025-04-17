@@ -6,7 +6,7 @@
 from tango import DbData, DbDatum, DeviceProxy
 from exception.global_exception import GlobalException
 from model.request_models import ResponseModel
-from enums.enum_response import Code, Message
+from enums.enum_response import Code, Message, MCPPrompt
 from tools.tool_dev_status import check_dev
 from config.log_config import get_logger
 
@@ -14,6 +14,13 @@ logger = get_logger(__name__)
 
 
 def get_property(dev_name: str, prop_name: str):
+    """
+    Get a property for a device.
+
+    :param dev_name: The name of the device.
+    :param prop_name: The name of the property to get.
+    :return: The property for the device.
+    """
     try:
         logger.info(f"Getting property {prop_name} for device {dev_name}")
         device_proxy = DeviceProxy(dev_name)
@@ -29,12 +36,21 @@ def get_property(dev_name: str, prop_name: str):
         )
     except Exception as e:
         logger.error(f"Error getting property {prop_name} for device {dev_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_PROPERTY_ERROR.name, str(e))
 
 
 def put_property(
     dev_name: str, prop_name: str, prop_value: str, reinitialize: bool = False
 ):
+    """
+    Put a property for a device.
+
+    :param dev_name: The name of the device.
+    :param prop_name: The name of the property to put.
+    :param prop_value: The value of the property to put.
+    :param reinitialize: Whether to reinitialize the device.
+    :return: The property for the device.
+    """
     try:
         logger.info(f"Putting property {prop_name} for device {dev_name}")
         device_proxy = DeviceProxy(dev_name)
@@ -56,10 +72,18 @@ def put_property(
         )
     except Exception as e:
         logger.error(f"Error putting property {prop_name} for device {dev_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_PROPERTY_ERROR.name, str(e))
 
 
 def put_property_list(dev_name: str, prop_list: dict, reinitialize: bool = False):
+    """
+    Put a property list for a device.
+
+    :param dev_name: The name of the device.
+    :param prop_list: The property list to put.
+    :param reinitialize: Whether to reinitialize the device.
+    :return: The property list for the device.
+    """
     try:
         logger.info(f"Putting property list for device {dev_name}")
         device_proxy = DeviceProxy(dev_name)
@@ -81,10 +105,16 @@ def put_property_list(dev_name: str, prop_list: dict, reinitialize: bool = False
         )
     except Exception as e:
         logger.error(f"Error putting property list for device {dev_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_DEVICE.name, str(e))
 
 
 def get_property_list(dev_name: str):
+    """
+    Get a property list for a device.
+
+    :param dev_name: The name of the device.
+    :return: The property list for the device.
+    """
     try:
         logger.info(f"Getting property list for device {dev_name}")
         device_proxy = DeviceProxy(dev_name)
@@ -104,10 +134,17 @@ def get_property_list(dev_name: str):
         )
     except Exception as e:
         logger.error(f"Error getting property list for device {dev_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.NOT_FOUND_DEVICE.name, str(e))
 
 
 def del_property(dev_name: str, prop_name: str):
+    """
+    Delete a property for a device.
+
+    :param dev_name: The name of the device.
+    :param prop_name: The name of the property to delete.
+    :return: The property for the device.
+    """
     try:
         logger.info(f"Deleting property {prop_name} for device {dev_name}")
         device_proxy = DeviceProxy(dev_name)
@@ -123,4 +160,4 @@ def del_property(dev_name: str, prop_name: str):
         )
     except Exception as e:
         logger.error(f"Error deleting property {prop_name} for device {dev_name}: {e}")
-        raise GlobalException(str(e))
+        raise GlobalException(MCPPrompt.DEVICE_OR_PROPERTY_ERROR.name, str(e))
