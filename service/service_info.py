@@ -57,13 +57,16 @@ def get_device_list(filter: str = "*"):
     """
     try:
         logger.info("Getting device list from the Tango database")
-
-        exported_list: list[DbDatum] = db.get_device_exported("*")
-        find_list: list[DbDatum] = []
-        for device in exported_list:
-            if filter in device:
-                find_list.append(device)
-        return find_list
+        if filter == "*":
+            return list(db.get_device_exported(filter))
+        else:
+            exported_list: list[DbDatum] = db.get_device_exported("*")
+            find_list: list[DbDatum] = []
+            for device in exported_list:
+                if filter in device:
+                    find_list.append(device)
+            return find_list
+        
     except Exception as e:
         logger.error("Error getting device list from the Tango database: {e}")
         raise GlobalException(MCPPrompt.EXCEPTION.name, str(e))
@@ -78,12 +81,15 @@ def get_class_list(filter: str = "*"):
     """
     try:
         logger.info("Getting class list from the Tango database")
-        exported_list: list[DbDatum] = db.get_class_list("*")
-        find_list: list[DbDatum] = []
-        for device in exported_list:
-            if filter in device:
-                find_list.append(device)
-        return find_list
+        if filter == "*":
+            return list(db.get_class_list(filter))
+        else:
+            exported_list: list[DbDatum] = db.get_class_list("*")
+            find_list: list[DbDatum] = []
+            for device in exported_list:
+                if filter in device:
+                    find_list.append(device)
+            return find_list
     except Exception as e:
         logger.error("Error getting class list from the Tango database: {e}")
         raise GlobalException(MCPPrompt.EXCEPTION.name, str(e))
@@ -98,12 +104,15 @@ def get_server_list(filter: str = "*"):
     """
     try:
         logger.info("Getting server list from the Tango database")
-        exported_list: list[DbDatum] = db.get_server_list("*")
-        find_list: list[DbDatum] = []
-        for device in exported_list:
-            if filter in device:
-                find_list.append(device)
-        return find_list
+        if filter == "*":
+            return list(db.get_server_list(filter))
+        else:
+            exported_list: list[DbDatum] = db.get_server_list("*")
+            find_list: list[DbDatum] = []
+            for device in exported_list:
+                if filter in device:
+                    find_list.append(device)
+            return find_list
     except Exception as e:
         logger.error("Error getting server list from the Tango database: {e}")
         raise GlobalException(MCPPrompt.EXCEPTION.name, str(e))
