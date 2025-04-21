@@ -1,6 +1,6 @@
 # ~TO DO （MCP Server）Under development~
 
-There is already a FastAPI to MCP project （https://github.com/tadata-org/fastapi_mcp）, which can be directly applied
+There is already a FastAPI to MCP project https://github.com/tadata-org/fastapi_mcp, which can be directly applied
 Consider directly integrating MCP with Tango server
 
 Connect to MCP (Model Context Protocol) and drive it with a large model
